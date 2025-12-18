@@ -6,11 +6,25 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     if args.len() < 2 {
-        eprintln!("Uso: count-lines <arquivo>");
+        eprintln!("Uso: count-lines [--no-empty] <arquivo>");
         process::exit(1);
     }
 
-    let nome_arquivo = &args[1];
+    let mut ignorar_vazias = false;
+    let mut nome_arquivo = "";
+
+    for arg in &args[1..] {
+        if arg == "--no-empty" {
+            ignorar_vazias = true;
+        } else {
+            nome_arquivo = arg;
+        }
+    }
+
+    if nome_arquivo.is_empty() {
+        eprintln!("Erro: nenhum arquivo especificado");
+        process::exit(1);
+    }
 
     let conteudo = match fs::read_to_string(nome_arquivo) {
         Ok(conteudo) => conteudo,
@@ -20,7 +34,16 @@ fn main() {
         }
     };
 
-    let linhas = conteudo.lines().count();
+    let linhas = if ignorar_vazias {
+        conteudo
+            .lines()
+            .filter(|linha| !linha.trim().is_empty())
+            .count()
+    } else {
+        conteudo.lines().count()
+    };
 
-    println!("{}: {} linhas", nome_arquivo, linhas);
+    let sufixo = if ignorar_vazias { " (sem vazias)" } else { "" };
+
+    println!("{}: {} linhas{}", nome_arquivo, linhas, sufixo);
 }
