@@ -10,11 +10,13 @@ Este projeto foi desenvolvido em 4 etapas, marcadas por tags:
 | [v2] | Aceita arquivo via CLI | `env::args()`, `Vec<String>` |
 | [v3] | Tratamento de erros idiomático | `Result<T, E>`, `match`, `eprintln!` |
 | [v4] | Flag `--no-empty` para ignorar linhas vazias | `.filter()`, closures, `.trim()` |
+ | [v5] | Operador `?` para propagação de erros | `Result<(), E>`, `Box<dyn Error>`, `if let`, `main()/run()`, `.into()` |
 
 [v1]: https://github.com/joaofelipegalvao/count-lines/releases/tag/v0.1.0
 [v2]: https://github.com/joaofelipegalvao/count-lines/releases/tag/v0.2.0
 [v3]: https://github.com/joaofelipegalvao/count-lines/releases/tag/v0.3.0
 [v4]: https://github.com/joaofelipegalvao/count-lines/releases/tag/v0.4.0
+[v5]: https://github.com/joaofelipegalvao/count-lines/releases/tag/v0.4.0
 
 ## 🚀 Como usar
 
@@ -34,13 +36,16 @@ git checkout v0.1.0  # ou qualquer tag
 - ✅ Tratamento de erros idiomático
 - ✅ Iteradores e filtros
 - ✅ Closures
-- ✅ Git tags (organização de versões)
+- ✅ Result<(), E> para funções que podem falhar
+- ✅ Box<dyn Error> para erros genéricos
+- ✅ if let para matching simplificado
+- ✅ Padrão main()/run()
 
 ## 🎯 Próximos passos
 
+- [x] Refatorar com `?` operator
 - [ ] Múltiplos arquivos
 - [ ] Ignorar comentários
-- [ ] Refatorar com `?` operator
 - [ ] Testes unitários
 
 ---
