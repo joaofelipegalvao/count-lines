@@ -14,37 +14,47 @@ fn run() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = env::args().collect();
 
     if args.len() < 2 {
-        return Err("Uso: count-lines [--no-empty] <arquivo>".into());
+        return Err("Uso: count-lines [--no-empty] <arquivo1> [arquivo2...]".into());
     }
 
     let mut ignorar_vazias = false;
-    let mut nome_arquivo = "";
+    let mut arquivos: Vec<&str> = Vec::new();
 
     for arg in &args[1..] {
         if arg == "--no-empty" {
             ignorar_vazias = true;
         } else {
-            nome_arquivo = arg;
+            arquivos.push(arg);
         }
     }
 
-    if nome_arquivo.is_empty() {
+    if arquivos.is_empty() {
         return Err("Nenhum arquivo especificado".into());
     }
 
-    let conteudo = fs::read_to_string(nome_arquivo)?;
+    let mut total = 0;
 
-    let linhas = if ignorar_vazias {
-        conteudo
-            .lines()
-            .filter(|linha| !linha.trim().is_empty())
-            .count()
-    } else {
-        conteudo.lines().count()
-    };
+    for arquivo in &arquivos {
+        let conteudo = fs::read_to_string(arquivo)?;
 
-    let sufixo = if ignorar_vazias { " (sem vazias)" } else { "" };
+        let linhas = if ignorar_vazias {
+            conteudo
+                .lines()
+                .filter(|linha| !linha.trim().is_empty())
+                .count()
+        } else {
+            conteudo.lines().count()
+        };
 
-    println!("{}: {} linhas{}", nome_arquivo, linhas, sufixo);
+        total += linhas;
+
+        let sufixo = if ignorar_vazias { " (sem vazias)" } else { "" };
+        println!("{}: {} linhas{}", arquivo, linhas, sufixo);
+    }
+
+    if arquivos.len() > 1 {
+        eprintln!("\nTotal: {} linhas", total);
+    }
+
     Ok(())
 }
